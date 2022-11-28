@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "751602437564",
+    "project_id": "gamified-habit-tracker",
+    "storage_bucket": "gamified-habit-tracker.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751602437564:android:5c9f9295431f4dcf8f6fb9",
+        "android_client_info": {
+          "package_name": "ace.voidapps.gamifiedhabittracker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751602437564-5i4on1gupb6k0qsukk3s84am0f2pij9o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPmC1_ZgWF71d0VdBDh2u4d9Q4PydeZXU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751602437564-5i4on1gupb6k0qsukk3s84am0f2pij9o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

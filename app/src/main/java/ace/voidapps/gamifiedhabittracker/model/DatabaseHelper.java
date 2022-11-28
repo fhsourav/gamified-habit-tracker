@@ -25,7 +25,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	private static final String IS_ADMIN = "IsAdmin";
 	private static final String HABIT_ID = "HabitId";
 	private static final String HABIT_TITLE = "HabitTitle";
-	private static final String HABIT_TYPE = "HabitType";
 	private static final String HABIT_DETAILS = "HabitDetails";
 	private static final String PERIODICITY = "Periodicity";
 	private static final String STREAK = "Streak";
@@ -63,7 +62,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 				HABIT_ID + " integer primary key autoincrement, " +
 				USER_ID + " integer, " +
 				HABIT_TITLE + " nvarchar(40) not null, " +
-				HABIT_TYPE + " boolean, " +
 				HABIT_DETAILS + " nvarchar(255), " +
 				PERIODICITY + " integer not null, " +
 				STREAK + " integer, " +

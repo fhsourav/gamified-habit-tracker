@@ -13,17 +13,6 @@ public class User {
 	private LocalDate birthDate;
 	private boolean isAdmin;
 
-	public User(int userId, String username, String password, String email, String firstname, String lastName, LocalDate birthDate) {
-		this.userId = userId;
-		this.username = username;
-		this.password = password;
-		this.email = email;
-		this.firstname = firstname;
-		this.lastName = lastName;
-		this.birthDate = birthDate;
-		isAdmin = false;
-	}
-
 	public User(int userId, String username, String password, String email, String firstname, String lastName, LocalDate birthDate, boolean isAdmin) {
 		this.userId = userId;
 		this.username = username;
