@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context=".controller.LoginActivity">
+
+	<EditText
+		android:id="@+id/editTextLoginEmailAddress"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:ems="10"
+		android:hint="@string/email"
+		android:inputType="textEmailAddress"
+		android:minHeight="48dp" />
+
+	<EditText
+		android:id="@+id/editTextLoginPassword"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:ems="10"
+		android:hint="@string/password"
+		android:inputType="textPassword"
+		android:minHeight="48dp" />
+
+	<CheckBox
+		android:id="@+id/checkBoxIsAdmin"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:text="@string/is_admin" />
+
+	<Button
+		android:id="@+id/buttonLogin"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:text="@string/login" />
+
+	<TextView
+		android:id="@+id/textViewLoginToSignup"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:text="@string/no_account"
+		android:textAlignment="center" />
+</LinearLayout>

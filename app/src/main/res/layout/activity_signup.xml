@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	tools:context=".controller.SignupActivity">
+
+	<EditText
+		android:id="@+id/editTextTextSignupFirstName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/fist_name"
+		android:inputType="textPersonName"
+		android:minHeight="48dp" />
+
+	<EditText
+		android:id="@+id/editTextTextSignupLastName"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/last_name"
+		android:inputType="textPersonName"
+		android:minHeight="48dp" />
+
+	<EditText
+		android:id="@+id/editTextTextSignupEmailAddress"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/email"
+		android:inputType="textEmailAddress" />
+
+	<EditText
+		android:id="@+id/editTextSignupBirthDate"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/birthdate"
+		android:inputType="date" />
+
+	<EditText
+		android:id="@+id/editTextTextSignupUname"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/uname"
+		android:inputType="textPersonName" />
+
+	<EditText
+		android:id="@+id/editTextSignupPassword"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/password"
+		android:inputType="textPassword" />
+
+	<EditText
+		android:id="@+id/editTextSignupPasswordConfirm"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:ems="10"
+		android:hint="@string/confirm_password"
+		android:inputType="textPassword" />
+
+	<Button
+		android:id="@+id/buttonSignup"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:text="@string/signup" />
+
+	<TextView
+		android:id="@+id/textViewSignupToLogin"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:layout_weight="1"
+		android:text="@string/have_account"
+		android:textAlignment="center" />
+
+</LinearLayout>

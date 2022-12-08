@@ -1,3 +1,15 @@
 <resources>
 	<string name="app_name">Gamified Habit Tracker</string>
+	<string name="fist_name">First Name</string>
+	<string name="last_name">Last Name</string>
+	<string name="uname">Username</string>
+	<string name="have_account">Already have an account? Log in!</string>
+	<string name="password">Password</string>
+	<string name="confirm_password">Confirm password</string>
+	<string name="email">Email</string>
+	<string name="birthdate">Birthdate</string>
+	<string name="is_admin">Admin</string>
+	<string name="signup">Sign up</string>
+	<string name="login">Log in</string>
+	<string name="no_account">Don\'t have an account? Sign Up!</string>
 </resources>
