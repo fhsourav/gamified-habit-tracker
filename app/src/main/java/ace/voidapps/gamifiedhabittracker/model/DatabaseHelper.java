@@ -123,7 +123,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 		ContentValues contentValues = new ContentValues();
 
 		contentValues.put(USERNAME, user.getUsername());
-		contentValues.put(PASSWORD, user.getPassword());
 		contentValues.put(EMAIL, user.getEmail());
 		contentValues.put(FIRST_NAME, user.getFirstname());
 		contentValues.put(LAST_NAME, user.getLastName());

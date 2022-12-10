@@ -9,14 +9,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import ace.voidapps.gamifiedhabittracker.R;
-import ace.voidapps.gamifiedhabittracker.model.Authentication;
+import ace.voidapps.gamifiedhabittracker.model.AuthenticationActivity;
+import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
 
 public class HomeActivity extends AppCompatActivity {
+
+	private LocalStorage localStorage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+
+		localStorage = LocalStorage.getInstance();
 	}
 
 	@Override
@@ -29,10 +34,10 @@ public class HomeActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
 		if (item.getItemId() == R.id.menuItemSignOut) {
-			new Authentication(this).signOut();
+			localStorage.setAuthAction(2);
 			finish();
-			Intent loginIntent = new Intent(getApplicationContext(), LoginActivity.class);
-			startActivity(loginIntent);
+			Intent authenticationIntent = new Intent(getApplicationContext(), AuthenticationActivity.class);
+			startActivity(authenticationIntent);
 		}
 
 		return super.onOptionsItemSelected(item);

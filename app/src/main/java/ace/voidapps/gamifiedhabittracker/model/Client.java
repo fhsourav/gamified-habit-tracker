@@ -12,8 +12,8 @@ public class Client extends User {
 	private List<Feedback> feedbackList;
 	private int exp;
 
-	public Client(int userId, String username, String password, String email, String firstname, String lastName, LocalDate birthDate) {
-		super(userId, username, password, email, firstname, lastName, birthDate, false);
+	public Client(String userId, String username, String email, String firstname, String lastName, LocalDate birthDate) {
+		super(userId, username, email, firstname, lastName, birthDate, false);
 		habitList = new ArrayList<>();
 		rewardList = new ArrayList<>();
 		friendList = new ArrayList<>();

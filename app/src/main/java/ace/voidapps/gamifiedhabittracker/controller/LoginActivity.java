@@ -10,10 +10,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseUser;
-
 import ace.voidapps.gamifiedhabittracker.R;
-import ace.voidapps.gamifiedhabittracker.model.Authentication;
+import ace.voidapps.gamifiedhabittracker.model.AuthenticationActivity;
+import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -21,6 +20,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 	private CheckBox checkBoxIsAdmin;
 	private Button buttonLogin;
 	private TextView textViewToSignup;
+	private LocalStorage localStorage;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +32,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 		checkBoxIsAdmin = findViewById(R.id.checkBoxIsAdmin);
 		buttonLogin = findViewById(R.id.buttonLogin);
 		textViewToSignup = findViewById(R.id.textViewLoginToSignup);
+
+		localStorage = LocalStorage.getInstance();
 
 		buttonLogin.setOnClickListener(this);
 		textViewToSignup.setOnClickListener(this);
@@ -50,17 +52,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 			case R.id.buttonLogin:
 				String email = editTextEmail.getText().toString();
 				String password = editTextPassword.getText().toString();
-				FirebaseUser user = new Authentication(this, email, password).signIn();
-				updateUI(user);
+				localStorage.setAuthAction(1);
+				localStorage.setEmail(email);
+				localStorage.setPassword(password);
+				finish();
+				Intent intentAuth = new Intent(getApplicationContext(), AuthenticationActivity.class);
+				startActivity(intentAuth);
 				break;
 
 		}
-	}
-
-	private void updateUI(FirebaseUser user) {
-		finish();
-		Intent intentHome = new Intent(getApplicationContext(), HomeActivity.class);
-		startActivity(intentHome);
 	}
 
 }
