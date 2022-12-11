@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,6 +21,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 	private CheckBox checkBoxIsAdmin;
 	private Button buttonLogin;
 	private TextView textViewToSignup;
+
+	private String email, password;
+
 	private LocalStorage localStorage;
 
 	@Override
@@ -33,10 +37,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 		buttonLogin = findViewById(R.id.buttonLogin);
 		textViewToSignup = findViewById(R.id.textViewLoginToSignup);
 
-		localStorage = LocalStorage.getInstance();
-
 		buttonLogin.setOnClickListener(this);
 		textViewToSignup.setOnClickListener(this);
+	}
+
+	@Override
+	protected void onStart() {
+		localStorage = LocalStorage.getInstance();
+		super.onStart();
 	}
 
 	@Override
@@ -50,17 +58,37 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 				break;
 
 			case R.id.buttonLogin:
-				String email = editTextEmail.getText().toString();
-				String password = editTextPassword.getText().toString();
-				localStorage.setAuthAction(1);
-				localStorage.setEmail(email);
-				localStorage.setPassword(password);
+				checkValues();
+				addValuesToStorage();
 				finish();
 				Intent intentAuth = new Intent(getApplicationContext(), AuthenticationActivity.class);
 				startActivity(intentAuth);
 				break;
 
 		}
+	}
+
+	private void checkValues() {
+		email = editTextEmail.getText().toString();
+		password = editTextPassword.getText().toString();
+
+		if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+			editTextEmail.setError("Enter a valid email address");
+			editTextEmail.requestFocus();
+			return;
+		}
+
+		if (password.isEmpty() || password.length() < 8) {
+			editTextPassword.setError("Password must be of at least 8 digits");
+			editTextPassword.requestFocus();
+			return;
+		}
+	}
+
+	private void addValuesToStorage() {
+		localStorage.setAuthAction(1);
+		localStorage.setEmail(email);
+		localStorage.setPassword(password);
 	}
 
 }

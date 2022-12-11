@@ -21,7 +21,7 @@ import ace.voidapps.gamifiedhabittracker.controller.HomeActivity;
 import ace.voidapps.gamifiedhabittracker.controller.LoginActivity;
 import ace.voidapps.gamifiedhabittracker.controller.SignupActivity;
 
-public class AuthenticationActivity extends AppCompatActivity implements OnCompleteListener {
+public class AuthenticationActivity extends AppCompatActivity {
 
 	private static final String TAG = "EmailPassword";
 
@@ -32,13 +32,13 @@ public class AuthenticationActivity extends AppCompatActivity implements OnCompl
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_authentication);
-		localStorage = LocalStorage.getInstance();
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 
+		localStorage = LocalStorage.getInstance();
 		mAuth = FirebaseAuth.getInstance();
 		switch (localStorage.getAuthAction()) {
 			case 0:
@@ -56,14 +56,40 @@ public class AuthenticationActivity extends AppCompatActivity implements OnCompl
 	public void createAccount() {
 
 		mAuth.createUserWithEmailAndPassword(localStorage.getEmail(), localStorage.getPassword())
-				.addOnCompleteListener(this, this);
+				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						if (task.isSuccessful()) {
+							Log.d(TAG, "createUserWithEmail:success");
+							updateUI(mAuth.getCurrentUser());
+							Toast.makeText(AuthenticationActivity.this, "Authentication successful", Toast.LENGTH_SHORT).show();
+						} else {
+							Log.w(TAG, "createUserWithEmail:failure", task.getException());
+							updateUI(null);
+							Toast.makeText(AuthenticationActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
 
 	}
 
 	public void signIn() {
 
 		mAuth.signInWithEmailAndPassword(localStorage.getEmail(), localStorage.getPassword())
-				.addOnCompleteListener(this, this);
+				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						if (task.isSuccessful()) {
+							Log.d(TAG, "signInWithEmail:success");
+							updateUI(mAuth.getCurrentUser());
+							Toast.makeText(AuthenticationActivity.this, "User logged in", Toast.LENGTH_SHORT).show();
+						} else {
+							Log.w(TAG, "signInWithEmail:failure", task.getException());
+							updateUI(null);
+							Toast.makeText(AuthenticationActivity.this, "Log in failed. Incorrect email or password.", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
 
 	}
 
@@ -73,18 +99,6 @@ public class AuthenticationActivity extends AppCompatActivity implements OnCompl
 		updateUI(null);
 	}
 
-	@Override
-	public void onComplete(@NonNull Task task) {
-		if (task.isSuccessful()) {
-			Log.d(TAG, "createUserWithEmail:success");
-			updateUI(mAuth.getCurrentUser());
-			Toast.makeText(this, "Authentication successful", Toast.LENGTH_SHORT).show();
-		} else {
-			Log.w(TAG, "createUserWithEmail:failure", task.getException());
-			updateUI(null);
-			Toast.makeText(this, "Authentication failed.", Toast.LENGTH_SHORT).show();
-		}
-	}
 
 	private void updateUI(FirebaseUser firebaseUser) {
 		finish();

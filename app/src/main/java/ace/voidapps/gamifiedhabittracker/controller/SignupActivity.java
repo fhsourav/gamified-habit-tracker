@@ -71,6 +71,11 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
 	}
 
+	@Override
+	protected void onStart() {
+		super.onStart();
+	}
+
 	@RequiresApi(api = Build.VERSION_CODES.O)
 	@Override
 	public void onClick(View view) {

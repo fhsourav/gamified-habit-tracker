@@ -1,5 +1,7 @@
 package ace.voidapps.gamifiedhabittracker.model;
 
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -17,6 +19,12 @@ public class DatabaseAssistant {
 		mDatabase.child("users").child(uid).child("FirstName").setValue(user.getFirstname());
 		mDatabase.child("users").child(uid).child("LastName").setValue(user.getLastName());
 		mDatabase.child("users").child(uid).child("BirthDate").setValue(user.getBirthDate().toString());
+		mDatabase.child("users").child(uid).child("IsAdmin").setValue(user.isAdmin());
+	}
+
+	public Task<DataSnapshot> retrieveUser(String uid) {
+		Task<DataSnapshot> userTask = mDatabase.child("users").child(uid).get();
+		return userTask;
 	}
 
 }

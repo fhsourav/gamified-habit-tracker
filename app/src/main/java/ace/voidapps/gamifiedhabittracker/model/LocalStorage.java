@@ -10,6 +10,8 @@ public class LocalStorage {
 	private String uid, uname, password, email, firstName, lastName;
 	private LocalDate birthdate;
 
+	private User user;
+
 	private LocalStorage() {
 
 	}
@@ -35,13 +37,13 @@ public class LocalStorage {
 		this.authAction = authAction;
 	}
 
-	public String getUid() {
-		return uid;
-	}
-
-	public void setUid(String uid) {
-		this.uid = uid;
-	}
+//	public String getUid() {
+//		return uid;
+//	}
+//
+//	public void setUid(String uid) {
+//		this.uid = uid;
+//	}
 
 	public String getUname() {
 		return uname;
@@ -89,5 +91,9 @@ public class LocalStorage {
 
 	public void setBirthdate(LocalDate birthdate) {
 		this.birthdate = birthdate;
+	}
+
+	public void clearAll() {
+		localStorage = new LocalStorage();
 	}
 }
