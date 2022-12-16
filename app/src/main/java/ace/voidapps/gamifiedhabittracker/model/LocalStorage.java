@@ -6,11 +6,12 @@ public class LocalStorage {
 
 	private static LocalStorage localStorage;
 
-	private int authAction;
-	private String uid, uname, password, email, firstName, lastName;
+	private int authAction, periodicity;
+	private String uid, uname, password, email, firstName, lastName, hid, habitTitle, habitDetails;
 	private LocalDate birthdate;
 
 	private User user;
+	private Habit habit;
 
 	private LocalStorage() {
 
@@ -37,13 +38,17 @@ public class LocalStorage {
 		this.authAction = authAction;
 	}
 
-//	public String getUid() {
-//		return uid;
-//	}
-//
-//	public void setUid(String uid) {
-//		this.uid = uid;
-//	}
+	public void clearAll() {
+		localStorage = new LocalStorage();
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
+	}
 
 	public String getUname() {
 		return uname;
@@ -85,6 +90,38 @@ public class LocalStorage {
 		this.lastName = lastName;
 	}
 
+	public String getHid() {
+		return hid;
+	}
+
+	public void setHid(String hid) {
+		this.hid = hid;
+	}
+
+	public String getHabitTitle() {
+		return habitTitle;
+	}
+
+	public void setHabitTitle(String habitTitle) {
+		this.habitTitle = habitTitle;
+	}
+
+	public String getHabitDetails() {
+		return habitDetails;
+	}
+
+	public void setHabitDetails(String habitDetails) {
+		this.habitDetails = habitDetails;
+	}
+
+	public int getPeriodicity() {
+		return periodicity;
+	}
+
+	public void setPeriodicity(int periodicity) {
+		this.periodicity = periodicity;
+	}
+
 	public LocalDate getBirthdate() {
 		return birthdate;
 	}
@@ -93,7 +130,19 @@ public class LocalStorage {
 		this.birthdate = birthdate;
 	}
 
-	public void clearAll() {
-		localStorage = new LocalStorage();
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
+	public Habit getHabit() {
+		return habit;
+	}
+
+	public void setHabit(Habit habit) {
+		this.habit = habit;
 	}
 }

@@ -5,10 +5,10 @@
 	android:layout_width="match_parent"
 	android:layout_height="match_parent"
 	android:orientation="vertical"
-	tools:context=".controller.LoginActivity">
+	tools:context=".controller.AddHabitActivity">
 
 	<EditText
-		android:id="@+id/editTextLoginEmailAddress"
+		android:id="@+id/editTextTextHabitTitle"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="10dp"
@@ -16,12 +16,12 @@
 		android:layout_marginEnd="10dp"
 		android:layout_marginBottom="5dp"
 		android:ems="10"
-		android:hint="@string/email"
-		android:inputType="textEmailAddress"
+		android:hint="@string/habit_title"
+		android:inputType="textPersonName"
 		android:minHeight="48dp" />
 
 	<EditText
-		android:id="@+id/editTextLoginPassword"
+		android:id="@+id/editTextTextHabitDetails"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="10dp"
@@ -29,28 +29,40 @@
 		android:layout_marginEnd="10dp"
 		android:layout_marginBottom="5dp"
 		android:ems="10"
-		android:hint="@string/password"
-		android:inputType="textPassword"
+		android:hint="@string/habit_details"
+		android:inputType="textPersonName"
 		android:minHeight="48dp" />
+
+	<EditText
+		android:id="@+id/editTextNumberDecimalPeriodicity"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:ems="10"
+		android:hint="@string/habit_periodicity"
+		android:inputType="numberDecimal"
+		android:minHeight="48dp" />
+
+	<CheckBox
+		android:id="@+id/checkBoxDoneItToday"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginStart="10dp"
+		android:layout_marginTop="5dp"
+		android:layout_marginEnd="10dp"
+		android:layout_marginBottom="5dp"
+		android:text="@string/habit_done_it_today" />
 
 	<Button
-		android:id="@+id/buttonLogin"
+		android:id="@+id/buttonAddHabit"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
 		android:layout_marginStart="10dp"
 		android:layout_marginTop="5dp"
 		android:layout_marginEnd="10dp"
 		android:layout_marginBottom="5dp"
-		android:text="@string/login" />
-
-	<TextView
-		android:id="@+id/textViewLoginToSignup"
-		android:layout_width="match_parent"
-		android:layout_height="wrap_content"
-		android:layout_marginStart="10dp"
-		android:layout_marginTop="5dp"
-		android:layout_marginEnd="10dp"
-		android:layout_marginBottom="5dp"
-		android:text="@string/no_account"
-		android:textAlignment="center" />
+		android:text="@string/add_habit" />
 </LinearLayout>

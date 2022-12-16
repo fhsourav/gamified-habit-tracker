@@ -13,6 +13,27 @@
 		android:theme="@style/Theme.GamifiedHabitTracker"
 		tools:targetApi="31">
 		<activity
+			android:name=".controller.RewardsActivity"
+			android:exported="false">
+			<meta-data
+				android:name="android.app.lib_name"
+				android:value="" />
+		</activity>
+		<activity
+			android:name=".controller.AddHabitActivity"
+			android:exported="false">
+			<meta-data
+				android:name="android.app.lib_name"
+				android:value="" />
+		</activity>
+		<activity
+			android:name=".controller.ProfileActivity"
+			android:exported="false">
+			<meta-data
+				android:name="android.app.lib_name"
+				android:value="" />
+		</activity>
+		<activity
 			android:name=".model.AuthenticationActivity"
 			android:exported="false">
 			<meta-data

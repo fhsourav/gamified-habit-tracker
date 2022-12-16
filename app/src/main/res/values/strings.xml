@@ -15,4 +15,8 @@
 	<string name="sign_out">Sign out</string>
 	<string name="view_profile">View profile</string>
 	<string name="add_habit">Add habit</string>
+	<string name="habit_title">Title</string>
+	<string name="habit_details">Details</string>
+	<string name="habit_done_it_today">Done it today?</string>
+	<string name="habit_periodicity">Periodicity (in days)</string>
 </resources>

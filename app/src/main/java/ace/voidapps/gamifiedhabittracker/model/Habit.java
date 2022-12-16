@@ -1,22 +1,30 @@
 package ace.voidapps.gamifiedhabittracker.model;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Habit {
 
-	private int habitId;
+	private String habitId;
 	private Client client;
 	private String title;
 	private String details;
 	private Period periodicity;
 	private List<Reward> unlockedRewards;
-	private Period streak;
+	private int streak;
 	private LocalDateTime lastCheckedIn;
+	private final LocalDateTime createdOn;
 	private int exp;
 
-	public Habit(int habitId, Client client, String title, String details, Period periodicity, List<Reward> unlockedRewards, Period streak, LocalDateTime lastCheckedIn, int exp) {
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public Habit(String habitId, Client client, String title, String details, Period periodicity, List<Reward> unlockedRewards, int streak, LocalDateTime lastCheckedIn, int exp) {
 		this.habitId = habitId;
 		this.client = client;
 		this.title = title;
@@ -26,13 +34,19 @@ public class Habit {
 		this.streak = streak;
 		this.lastCheckedIn = lastCheckedIn;
 		this.exp = exp;
+		createdOn = LocalDateTime.now();
 	}
 
-	public int getHabitId() {
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public Habit(String habitId, Client client, String title, String details, Period periodicity, LocalDateTime lastCheckedIn) {
+		this(habitId, client, title, details, periodicity, new ArrayList<Reward>(), 0, lastCheckedIn, 0);
+	}
+
+	public String getHabitId() {
 		return habitId;
 	}
 
-	public void setHabitId(int habitId) {
+	public void setHabitId(String habitId) {
 		this.habitId = habitId;
 	}
 
@@ -76,11 +90,11 @@ public class Habit {
 		this.unlockedRewards = unlockedRewards;
 	}
 
-	public Period getStreak() {
+	public int getStreak() {
 		return streak;
 	}
 
-	public void setStreak(Period streak) {
+	public void setStreak(int streak) {
 		this.streak = streak;
 	}
 
@@ -90,6 +104,10 @@ public class Habit {
 
 	public void setLastCheckedIn(LocalDateTime lastCheckedIn) {
 		this.lastCheckedIn = lastCheckedIn;
+	}
+
+	public LocalDateTime getCreatedOn() {
+		return createdOn;
 	}
 
 	public int getExp() {

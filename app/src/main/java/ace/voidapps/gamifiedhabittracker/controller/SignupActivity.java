@@ -54,8 +54,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 		buttonSignup = findViewById(R.id.buttonSignup);
 		textViewToLogin = findViewById(R.id.textViewSignupToLogin);
 
-		localStorage = LocalStorage.getInstance();
-
 		buttonSignup.setOnClickListener(this);
 		textViewToLogin.setOnClickListener(this);
 		editTextBirthDate.setOnClickListener(this);
@@ -74,6 +72,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 	@Override
 	protected void onStart() {
 		super.onStart();
+		localStorage = LocalStorage.getInstance();
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.O)

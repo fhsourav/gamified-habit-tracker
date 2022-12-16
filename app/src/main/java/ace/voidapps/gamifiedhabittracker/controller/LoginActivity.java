@@ -18,7 +18,6 @@ import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
 	private EditText editTextEmail, editTextPassword;
-	private CheckBox checkBoxIsAdmin;
 	private Button buttonLogin;
 	private TextView textViewToSignup;
 
@@ -33,7 +32,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 		editTextEmail = findViewById(R.id.editTextLoginEmailAddress);
 		editTextPassword = findViewById(R.id.editTextLoginPassword);
-		checkBoxIsAdmin = findViewById(R.id.checkBoxIsAdmin);
 		buttonLogin = findViewById(R.id.buttonLogin);
 		textViewToSignup = findViewById(R.id.textViewLoginToSignup);
 
@@ -43,8 +41,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 	@Override
 	protected void onStart() {
-		localStorage = LocalStorage.getInstance();
 		super.onStart();
+		localStorage = LocalStorage.getInstance();
 	}
 
 	@Override

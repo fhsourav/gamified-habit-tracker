@@ -2,7 +2,7 @@ package ace.voidapps.gamifiedhabittracker.model;
 
 import java.time.LocalDate;
 
-public class User {
+public abstract class User {
 
 	private String userId;
 	private String username;

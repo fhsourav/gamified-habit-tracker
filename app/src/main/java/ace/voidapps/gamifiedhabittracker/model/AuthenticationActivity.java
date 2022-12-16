@@ -14,8 +14,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.time.LocalDate;
-
 import ace.voidapps.gamifiedhabittracker.R;
 import ace.voidapps.gamifiedhabittracker.controller.HomeActivity;
 import ace.voidapps.gamifiedhabittracker.controller.LoginActivity;
@@ -95,6 +93,7 @@ public class AuthenticationActivity extends AppCompatActivity {
 
 	public void signOut() {
 		mAuth.signOut();
+		localStorage.clearAll();
 		finish();
 		updateUI(null);
 	}
