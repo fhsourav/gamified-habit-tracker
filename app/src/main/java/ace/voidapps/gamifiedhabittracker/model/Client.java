@@ -60,4 +60,8 @@ public class Client extends User {
 	public void setExp(int exp) {
 		this.exp = exp;
 	}
+
+	public void addHabit(Habit habit) {
+		habitList.add(habit);
+	}
 }

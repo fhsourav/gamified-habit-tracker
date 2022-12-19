@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,7 +23,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 
 import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 import ace.voidapps.gamifiedhabittracker.R;
 import ace.voidapps.gamifiedhabittracker.model.Admin;
@@ -30,8 +33,11 @@ import ace.voidapps.gamifiedhabittracker.model.Client;
 import ace.voidapps.gamifiedhabittracker.model.DatabaseAssistant;
 import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
 import ace.voidapps.gamifiedhabittracker.model.User;
+import ace.voidapps.gamifiedhabittracker.view.HabitListAdapter;
 
 public class HomeActivity extends AppCompatActivity {
+
+	List<String> habitList;
 
 	private LocalStorage localStorage;
 	private DatabaseAssistant databaseAssistant;
@@ -41,14 +47,16 @@ public class HomeActivity extends AppCompatActivity {
 
 	private TextView textViewName;
 	private FloatingActionButton floatingActionButtonAddHabit;
+	private ListView listViewHabitList;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		textViewName = findViewById(R.id.textViewName);
+		textViewName = findViewById(R.id.textViewNoHabits);
 		floatingActionButtonAddHabit = findViewById(R.id.floatingActionButtonAddHabit);
+		listViewHabitList = findViewById(R.id.listViewHabitList);
 
 		floatingActionButtonAddHabit.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -74,17 +82,16 @@ public class HomeActivity extends AppCompatActivity {
 					Log.d("firebase", String.valueOf(task.getResult().getValue()));
 					setUserToLocalStorage(task);
 					String firstName = task.getResult().child("FirstName").getValue(String.class);
-					Log.d("test", "First name = " + firstName);
-					String habits = "";
+					HomeActivity.this.setTitle(firstName);
+					habitList = new ArrayList<>();
 					for (DataSnapshot dsHabit:
 					task.getResult().child("habits").getChildren()) {
-						habits += dsHabit.getValue(String.class);
+						habitList.add(dsHabit.getValue(String.class));
 					}
-					if (habits.isEmpty()) {
-						habits = "No habits yet!";
+					if (!habitList.isEmpty()) {
+						textViewName.setVisibility(View.INVISIBLE);
+						listViewHabitList.setAdapter(new HabitListAdapter(HomeActivity.this, habitList));
 					}
-					HomeActivity.this.setTitle(firstName);
-					textViewName.setText(habits);
 				}
 				else {
 					Log.e("firebase", "Error getting data", task.getException());

@@ -6,11 +6,29 @@
 	android:layout_height="match_parent"
 	tools:context=".controller.HomeActivity">
 
+	<ListView
+		android:id="@+id/listViewHabitList"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:contentDescription="@string/list_of_habits"
+		app:layout_constraintBaseline_toTopOf="parent"
+		tools:layout_editor_absoluteX="10dp"
+		tools:layout_editor_absoluteY="10dp">
+
+<!--		<LinearLayout-->
+<!--			android:id="@+id/linearLayoutHomeHabitList"-->
+<!--			android:layout_width="match_parent"-->
+<!--			android:layout_height="wrap_content"-->
+<!--			android:orientation="vertical">-->
+
+<!--		</LinearLayout>-->
+	</ListView>
+
 	<TextView
-		android:id="@+id/textViewName"
+		android:id="@+id/textViewNoHabits"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
-		android:text="TextView"
+		android:text="@string/no_habits"
 		app:layout_constraintBottom_toBottomOf="parent"
 		app:layout_constraintEnd_toEndOf="parent"
 		app:layout_constraintStart_toStartOf="parent"

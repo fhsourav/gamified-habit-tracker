@@ -96,6 +96,7 @@ public class AddHabitActivity extends AppCompatActivity {
 			lastCheckedIn = LocalDateTime.now();
 		}
 		Habit habit = new Habit(habitKey, (Client) localStorage.getUser(), habitTitle, habitDetails, Period.ofDays(periodicity), lastCheckedIn);
+		((Client) localStorage.getUser()).addHabit(habit);
 		databaseAssistant.writeNewHabit(localStorage.getUser().getUserId(), habit);
 	}
 
