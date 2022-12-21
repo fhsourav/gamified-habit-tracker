@@ -11,8 +11,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,7 +24,9 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import ace.voidapps.gamifiedhabittracker.R;
 import ace.voidapps.gamifiedhabittracker.model.Admin;
@@ -37,15 +39,17 @@ import ace.voidapps.gamifiedhabittracker.view.HabitListAdapter;
 
 public class HomeActivity extends AppCompatActivity {
 
-	List<String> habitList;
+	private List<String> habitList;
+	private List<String> habitKeys;
 
 	private LocalStorage localStorage;
 	private DatabaseAssistant databaseAssistant;
 
 	private FirebaseUser fUser;
 	private Task<DataSnapshot> dataSnapshotTaskUser;
+	private Task<DataSnapshot> dataSnapShotHabit;
 
-	private TextView textViewName;
+	private TextView textViewNoHabits;
 	private FloatingActionButton floatingActionButtonAddHabit;
 	private ListView listViewHabitList;
 
@@ -54,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 
-		textViewName = findViewById(R.id.textViewNoHabits);
+		textViewNoHabits = findViewById(R.id.textViewNoHabits);
 		floatingActionButtonAddHabit = findViewById(R.id.floatingActionButtonAddHabit);
 		listViewHabitList = findViewById(R.id.listViewHabitList);
 
@@ -65,6 +69,16 @@ public class HomeActivity extends AppCompatActivity {
 				startActivity(intentAddHabit);
 			}
 		});
+
+		listViewHabitList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				localStorage.setHid(habitKeys.get(position));
+				Intent intentHabit = new Intent(getApplicationContext(), HabitActivity.class);
+				startActivity(intentHabit);
+			}
+		});
+
 	}
 
 	@Override
@@ -84,12 +98,14 @@ public class HomeActivity extends AppCompatActivity {
 					String firstName = task.getResult().child("FirstName").getValue(String.class);
 					HomeActivity.this.setTitle(firstName);
 					habitList = new ArrayList<>();
+					habitKeys = new ArrayList<>();
 					for (DataSnapshot dsHabit:
 					task.getResult().child("habits").getChildren()) {
 						habitList.add(dsHabit.getValue(String.class));
+						habitKeys.add(dsHabit.getKey());
 					}
 					if (!habitList.isEmpty()) {
-						textViewName.setVisibility(View.INVISIBLE);
+						textViewNoHabits.setVisibility(View.INVISIBLE);
 						listViewHabitList.setAdapter(new HabitListAdapter(HomeActivity.this, habitList));
 					}
 				}

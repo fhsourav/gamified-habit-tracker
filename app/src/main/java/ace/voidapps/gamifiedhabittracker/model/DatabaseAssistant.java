@@ -53,8 +53,8 @@ public class DatabaseAssistant {
 		return userTask;
 	}
 
-	public Task<DataSnapshot> retrieveHabits(String uid) {
-		Task<DataSnapshot> habitTask = mDatabase.child("habits").child(uid).get();
+	public Task<DataSnapshot> retrieveHabit(String hid) {
+		Task<DataSnapshot> habitTask = mDatabase.child("habits").child(hid).get();
 		return habitTask;
 	}
 

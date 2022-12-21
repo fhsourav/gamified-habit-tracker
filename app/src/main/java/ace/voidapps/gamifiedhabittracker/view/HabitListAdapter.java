@@ -12,13 +12,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 import ace.voidapps.gamifiedhabittracker.R;
 
 public class HabitListAdapter extends ArrayAdapter<String> {
 
 	private List<String> habitList;
-	Activity context;
+	private Activity context;
+
 	/**
 	 * Constructor
 	 *

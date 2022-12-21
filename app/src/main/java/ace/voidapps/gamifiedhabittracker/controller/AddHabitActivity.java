@@ -13,6 +13,7 @@ import android.widget.EditText;
 
 import com.google.firebase.auth.FirebaseUser;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Period;
 
@@ -91,9 +92,9 @@ public class AddHabitActivity extends AppCompatActivity {
 	private void AddHabitToDatabase() {
 		DatabaseAssistant databaseAssistant = new DatabaseAssistant();
 		String habitKey = databaseAssistant.getHabitKey();
-		LocalDateTime lastCheckedIn = null;
+		LocalDate lastCheckedIn = null;
 		if (doneToday) {
-			lastCheckedIn = LocalDateTime.now();
+			lastCheckedIn = LocalDate.now();
 		}
 		Habit habit = new Habit(habitKey, (Client) localStorage.getUser(), habitTitle, habitDetails, Period.ofDays(periodicity), lastCheckedIn);
 		((Client) localStorage.getUser()).addHabit(habit);

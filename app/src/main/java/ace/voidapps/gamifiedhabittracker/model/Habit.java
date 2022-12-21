@@ -19,12 +19,12 @@ public class Habit {
 	private Period periodicity;
 	private List<Reward> unlockedRewards;
 	private int streak;
-	private LocalDateTime lastCheckedIn;
+	private LocalDate lastCheckedIn;
 	private final LocalDateTime createdOn;
 	private int exp;
 
 	@RequiresApi(api = Build.VERSION_CODES.O)
-	public Habit(String habitId, Client client, String title, String details, Period periodicity, List<Reward> unlockedRewards, int streak, LocalDateTime lastCheckedIn, int exp) {
+	public Habit(String habitId, Client client, String title, String details, Period periodicity, List<Reward> unlockedRewards, int streak, LocalDate lastCheckedIn, int exp) {
 		this.habitId = habitId;
 		this.client = client;
 		this.title = title;
@@ -38,7 +38,7 @@ public class Habit {
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.O)
-	public Habit(String habitId, Client client, String title, String details, Period periodicity, LocalDateTime lastCheckedIn) {
+	public Habit(String habitId, Client client, String title, String details, Period periodicity, LocalDate lastCheckedIn) {
 		this(habitId, client, title, details, periodicity, new ArrayList<Reward>(), 0, lastCheckedIn, 0);
 	}
 
@@ -98,11 +98,11 @@ public class Habit {
 		this.streak = streak;
 	}
 
-	public LocalDateTime getLastCheckedIn() {
+	public LocalDate getLastCheckedIn() {
 		return lastCheckedIn;
 	}
 
-	public void setLastCheckedIn(LocalDateTime lastCheckedIn) {
+	public void setLastCheckedIn(LocalDate lastCheckedIn) {
 		this.lastCheckedIn = lastCheckedIn;
 	}
 
