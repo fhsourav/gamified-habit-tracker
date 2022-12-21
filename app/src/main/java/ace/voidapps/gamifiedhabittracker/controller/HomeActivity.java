@@ -24,9 +24,7 @@ import com.google.firebase.database.DataSnapshot;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import ace.voidapps.gamifiedhabittracker.R;
 import ace.voidapps.gamifiedhabittracker.model.Admin;
@@ -118,7 +116,7 @@ public class HomeActivity extends AppCompatActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_topbar, menu);
+		getMenuInflater().inflate(R.menu.menu_home_topbar, menu);
 		return super.onCreateOptionsMenu(menu);
 	}
 

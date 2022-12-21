@@ -1,9 +1,15 @@
 package ace.voidapps.gamifiedhabittracker.model;
 
+import android.os.Build;
+
+import androidx.annotation.RequiresApi;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.time.LocalDate;
 
 public class DatabaseAssistant {
 
@@ -25,7 +31,7 @@ public class DatabaseAssistant {
 		}
 	}
 
-	public void writeNewHabit(String uid, Habit habit) {
+	public void writeNewHabit(Habit habit) {
 		String key = mDatabase.child("habits").push().getKey();
 		mDatabase.child("habits").child(key).child("Title").setValue(habit.getTitle());
 		mDatabase.child("habits").child(key).child("Details").setValue(habit.getDetails());
@@ -34,19 +40,30 @@ public class DatabaseAssistant {
 		mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
 		mDatabase.child("habits").child(key).child("CreatedOn").setValue(habit.getCreatedOn().toString());
 		mDatabase.child("habits").child(key).child("Streak").setValue(habit.getStreak());
-		mDatabase.child("habits").child(key).child("UID").setValue(uid);
-		mDatabase.child("users").child(uid).child("habits").child(key).setValue(habit.getTitle());
+		mDatabase.child("habits").child(key).child("UID").setValue(habit.getClient().getUserId());
+		mDatabase.child("users").child(habit.getClient().getUserId()).child("habits").child(key).setValue(habit.getTitle());
 	}
 
-	public void writeNewReward(String uid, Habit habit) {
-		String key = mDatabase.child("habits").push().getKey();
-		mDatabase.child("habits").child(key).child("Title").setValue(habit.getTitle());
-		mDatabase.child("habits").child(key).child("Details").setValue(habit.getDetails());
-		mDatabase.child("habits").child(key).child("ExperiencePoints").setValue(habit.getExp());
-		mDatabase.child("habits").child(key).child("Periodicity").setValue(habit.getPeriodicity().toString());
-		mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
-		mDatabase.child("habits").child(key).child("Streak").setValue(habit.getStreak());
+	public void habitCheckIn(Habit habit) {
+		mDatabase.child("habits").child(habit.getHabitId()).child("ExperiencePoints").setValue(habit.getExp());
+		mDatabase.child("habits").child(habit.getHabitId()).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
+		mDatabase.child("habits").child(habit.getHabitId()).child("Streak").setValue(habit.getStreak());
 	}
+
+	public void deleteHabit(Habit habit) {
+		mDatabase.child("habits").child(habit.getHabitId()).removeValue();
+		mDatabase.child("users").child(habit.getClient().getUserId()).child("habits").child(habit.getHabitId()).removeValue();
+	}
+
+//	public void writeNewReward(String uid, Habit habit) {
+//		String key = mDatabase.child("habits").push().getKey();
+//		mDatabase.child("habits").child(key).child("Title").setValue(habit.getTitle());
+//		mDatabase.child("habits").child(key).child("Details").setValue(habit.getDetails());
+//		mDatabase.child("habits").child(key).child("ExperiencePoints").setValue(habit.getExp());
+//		mDatabase.child("habits").child(key).child("Periodicity").setValue(habit.getPeriodicity().toString());
+//		mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
+//		mDatabase.child("habits").child(key).child("Streak").setValue(habit.getStreak());
+//	}
 
 	public Task<DataSnapshot> retrieveUser(String uid) {
 		Task<DataSnapshot> userTask = mDatabase.child("users").child(uid).get();

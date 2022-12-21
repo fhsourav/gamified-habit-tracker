@@ -117,4 +117,15 @@ public class Habit {
 	public void setExp(int exp) {
 		this.exp = exp;
 	}
+
+	@RequiresApi(api = Build.VERSION_CODES.O)
+	public void checkIn() {
+		LocalDate checkInTime = LocalDate.now();
+		if (checkInTime.isAfter(lastCheckedIn.plus(periodicity).plusDays(1))) {
+			streak = 1;
+		} else {
+			streak++;
+		}
+		lastCheckedIn = checkInTime;
+	}
 }

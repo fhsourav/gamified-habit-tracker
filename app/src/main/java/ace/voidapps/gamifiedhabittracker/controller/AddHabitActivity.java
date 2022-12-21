@@ -69,21 +69,25 @@ public class AddHabitActivity extends AppCompatActivity {
 		if (habitTitle.isEmpty()) {
 			editTextHabitTitle.setError("Title cannot be empty.");
 			editTextHabitTitle.requestFocus();
+			return;
 		}
 
 		if (habitDetails.isEmpty()) {
 			editTextHabitDetails.setError("Details cannot be empty.");
 			editTextHabitTitle.requestFocus();
+			return;
 		}
 
 		if (periodicityTemp.isEmpty()) {
 			editTextHabitPeriodicity.setError("Periodicity cannot be empty.");
 			editTextHabitTitle.requestFocus();
+			return;
 		} else {
 			periodicity = Integer.parseInt(periodicityTemp);
-			if (periodicity <= 0) {
+			if (periodicity < 0) {
 				editTextHabitPeriodicity.setError("Periodicity cannot be 0 or less.");
 				editTextHabitTitle.requestFocus();
+				return;
 			}
 		}
 	}
@@ -98,7 +102,7 @@ public class AddHabitActivity extends AppCompatActivity {
 		}
 		Habit habit = new Habit(habitKey, (Client) localStorage.getUser(), habitTitle, habitDetails, Period.ofDays(periodicity), lastCheckedIn);
 		((Client) localStorage.getUser()).addHabit(habit);
-		databaseAssistant.writeNewHabit(localStorage.getUser().getUserId(), habit);
+		databaseAssistant.writeNewHabit(habit);
 	}
 
 }

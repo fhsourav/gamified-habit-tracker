@@ -4,8 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -50,12 +53,6 @@ public class HabitActivity extends AppCompatActivity {
 
 		HabitActivity.this.setTitle(userFirstname);
 
-		buttonHabitCheckIn.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-
-			}
-		});
 	}
 
 	@Override
@@ -89,11 +86,36 @@ public class HabitActivity extends AppCompatActivity {
 				}
 			}
 		});
+
+		buttonHabitCheckIn.setOnClickListener(new View.OnClickListener() {
+			@RequiresApi(api = Build.VERSION_CODES.O)
+			@Override
+			public void onClick(View v) {
+				Habit habit = localStorage.getHabit();
+				habit.checkIn();
+				databaseAssistant.habitCheckIn(localStorage.getHabit());
+				textViewHabitStreak.setText(((Integer) habit.getStreak()).toString());
+			}
+		});
 	}
 
-	private void checkIn() {
-		streak++;
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu_habit_topbar, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
 
+	@Override
+	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+		if (item.getItemId() == R.id.menuItemDeleteHabit) {
+			databaseAssistant.deleteHabit(localStorage.getHabit());
+			finish();
+			Intent intentHome = new Intent(getApplicationContext(), HomeActivity.class);
+			startActivity(intentHome);
+		}
+
+		return super.onOptionsItemSelected(item);
 	}
 
 }
