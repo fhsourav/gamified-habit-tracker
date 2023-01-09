@@ -31,13 +31,19 @@ public class DatabaseAssistant {
 		}
 	}
 
+	@RequiresApi(api = Build.VERSION_CODES.O)
 	public void writeNewHabit(Habit habit) {
 		String key = mDatabase.child("habits").push().getKey();
 		mDatabase.child("habits").child(key).child("Title").setValue(habit.getTitle());
 		mDatabase.child("habits").child(key).child("Details").setValue(habit.getDetails());
 		mDatabase.child("habits").child(key).child("ExperiencePoints").setValue(habit.getExp());
 		mDatabase.child("habits").child(key).child("Periodicity").setValue(habit.getPeriodicity().toString());
-		mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
+		if (habit.getLastCheckedIn() != null) {
+			mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
+		} else {
+			mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(LocalDate.MIN.toString());
+		}
+
 		mDatabase.child("habits").child(key).child("CreatedOn").setValue(habit.getCreatedOn().toString());
 		mDatabase.child("habits").child(key).child("Streak").setValue(habit.getStreak());
 		mDatabase.child("habits").child(key).child("UID").setValue(habit.getClient().getUserId());
