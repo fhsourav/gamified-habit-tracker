@@ -1,28 +1,26 @@
-package ace.voidapps.gamifiedhabittracker.controller;
+package ace.voidapps.gamifiedhabittracker;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDate;
 import java.time.Period;
 
-import ace.voidapps.gamifiedhabittracker.R;
 import ace.voidapps.gamifiedhabittracker.model.Client;
-import ace.voidapps.gamifiedhabittracker.model.DatabaseAssistant;
 import ace.voidapps.gamifiedhabittracker.model.Habit;
 import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
 
@@ -31,8 +29,11 @@ public class HabitActivity extends AppCompatActivity {
 	private TextView textViewHabitTitle, textViewHabitStreak, textViewHabitDetails;
 	private Button buttonHabitCheckIn;
 
-	private DatabaseAssistant databaseAssistant;
+	private DatabaseReference mDatabase;
+
 	private LocalStorage localStorage;
+
+	private Habit habit;
 
 	private int streak;
 	private String userFirstname;
@@ -51,19 +52,13 @@ public class HabitActivity extends AppCompatActivity {
 
 		userFirstname = localStorage.getUser().getFirstname();
 
+		mDatabase = FirebaseDatabase.getInstance(LocalStorage.REALTIME_DATABASE).getReference();
+
 		HabitActivity.this.setTitle(userFirstname);
 
-	}
-
-	@Override
-	protected void onStart() {
-		super.onStart();
-
-		databaseAssistant = new DatabaseAssistant();
-		Task<DataSnapshot> dataSnapshotTaskHabit = databaseAssistant.retrieveHabit(localStorage.getHid());
+		Task<DataSnapshot> dataSnapshotTaskHabit = mDatabase.child("habits").child(localStorage.getHid()).get();
 
 		dataSnapshotTaskHabit.addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-			@RequiresApi(api = Build.VERSION_CODES.O)
 			@Override
 			public void onComplete(@NonNull Task<DataSnapshot> task) {
 				if (task.isSuccessful()) {
@@ -79,24 +74,28 @@ public class HabitActivity extends AppCompatActivity {
 					textViewHabitTitle.setText(habitTitle);
 					textViewHabitDetails.setText(habitDetails);
 					textViewHabitStreak.setText(((Integer) streak).toString());
-					Habit habit = new Habit(localStorage.getHid(), (Client) localStorage.getUser(), habitTitle, habitDetails, periodicity, lastCheckedIn);
-					localStorage.setHabit(habit);
+					habit = localStorage.getHabit();
+					if (habit == null) {
+						habit = new Habit(localStorage.getHid(), (Client) localStorage.getUser(), habitTitle, habitDetails, periodicity, lastCheckedIn);
+						localStorage.addHabit(habit);
+					}
 				} else {
-
+					Toast.makeText(HabitActivity.this, "Error loading habit", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
 
 		buttonHabitCheckIn.setOnClickListener(new View.OnClickListener() {
-			@RequiresApi(api = Build.VERSION_CODES.O)
 			@Override
 			public void onClick(View v) {
-				Habit habit = localStorage.getHabit();
 				habit.checkIn();
-				databaseAssistant.habitCheckIn(localStorage.getHabit());
+				mDatabase.child("habits").child(habit.getHabitId()).child("ExperiencePoints").setValue(habit.getExp());
+				mDatabase.child("habits").child(habit.getHabitId()).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
+				mDatabase.child("habits").child(habit.getHabitId()).child("Streak").setValue(habit.getStreak());
 				textViewHabitStreak.setText(((Integer) habit.getStreak()).toString());
 			}
 		});
+
 	}
 
 	@Override
@@ -109,10 +108,10 @@ public class HabitActivity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(@NonNull MenuItem item) {
 
 		if (item.getItemId() == R.id.menuItemDeleteHabit) {
-			databaseAssistant.deleteHabit(localStorage.getHabit());
+			Habit habit = localStorage.getHabit();
+			mDatabase.child("habits").child(habit.getHabitId()).removeValue();
+			mDatabase.child("users").child(habit.getClient().getUserId()).child("habits").child(habit.getHabitId()).removeValue();
 			finish();
-			Intent intentHome = new Intent(getApplicationContext(), HomeActivity.class);
-			startActivity(intentHome);
 		}
 
 		return super.onOptionsItemSelected(item);

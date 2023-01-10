@@ -1,28 +1,22 @@
-package ace.voidapps.gamifiedhabittracker.controller;
+package ace.voidapps.gamifiedhabittracker;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Period;
 
-import ace.voidapps.gamifiedhabittracker.R;
 import ace.voidapps.gamifiedhabittracker.model.Client;
-import ace.voidapps.gamifiedhabittracker.model.DatabaseAssistant;
 import ace.voidapps.gamifiedhabittracker.model.Habit;
 import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
-import ace.voidapps.gamifiedhabittracker.model.User;
 
 public class AddHabitActivity extends AppCompatActivity {
 
@@ -33,6 +27,8 @@ public class AddHabitActivity extends AppCompatActivity {
 	private int periodicity;
 	private boolean doneToday;
 	private String habitTitle, habitDetails;
+
+	private DatabaseReference mDatabase;
 
 	private LocalStorage localStorage;
 
@@ -47,20 +43,22 @@ public class AddHabitActivity extends AppCompatActivity {
 		checkBoxDoneToday = findViewById(R.id.checkBoxDoneItToday);
 		buttonAddHabit = findViewById(R.id.buttonAddHabit);
 
+		mDatabase = FirebaseDatabase.getInstance(LocalStorage.REALTIME_DATABASE).getReference();
+
 		localStorage = LocalStorage.getInstance();
 
 		buttonAddHabit.setOnClickListener(new View.OnClickListener() {
-			@RequiresApi(api = Build.VERSION_CODES.O)
 			@Override
 			public void onClick(View v) {
-				checkValues();
-				AddHabitToDatabase();
-				finish();
+				if (checkValues()) {
+					AddHabitToDatabase();
+					finish();
+				}
 			}
 		});
 	}
 
-	private void checkValues() {
+	private boolean checkValues() {
 		habitTitle = editTextHabitTitle.getText().toString();
 		habitDetails = editTextHabitDetails.getText().toString();
 		String periodicityTemp = editTextHabitPeriodicity.getText().toString();
@@ -69,40 +67,59 @@ public class AddHabitActivity extends AppCompatActivity {
 		if (habitTitle.isEmpty()) {
 			editTextHabitTitle.setError("Title cannot be empty.");
 			editTextHabitTitle.requestFocus();
-			return;
+			return false;
 		}
 
 		if (habitDetails.isEmpty()) {
 			editTextHabitDetails.setError("Details cannot be empty.");
 			editTextHabitTitle.requestFocus();
-			return;
+			return false;
 		}
 
 		if (periodicityTemp.isEmpty()) {
 			editTextHabitPeriodicity.setError("Periodicity cannot be empty.");
 			editTextHabitTitle.requestFocus();
-			return;
+			return false;
 		} else {
 			periodicity = Integer.parseInt(periodicityTemp);
 			if (periodicity < 0) {
 				editTextHabitPeriodicity.setError("Periodicity cannot be 0 or less.");
 				editTextHabitTitle.requestFocus();
-				return;
+				return false;
 			}
 		}
+
+		return true;
 	}
 
-	@RequiresApi(api = Build.VERSION_CODES.O)
 	private void AddHabitToDatabase() {
-		DatabaseAssistant databaseAssistant = new DatabaseAssistant();
-		String habitKey = databaseAssistant.getHabitKey();
+		String habitKey = mDatabase.child("habits").getKey();
 		LocalDate lastCheckedIn = null;
 		if (doneToday) {
 			lastCheckedIn = LocalDate.now();
 		}
 		Habit habit = new Habit(habitKey, (Client) localStorage.getUser(), habitTitle, habitDetails, Period.ofDays(periodicity), lastCheckedIn);
 		((Client) localStorage.getUser()).addHabit(habit);
-		databaseAssistant.writeNewHabit(habit);
+		writeNewHabit(habit);
+	}
+
+	public void writeNewHabit(Habit habit) {
+		String key = mDatabase.child("habits").push().getKey();
+		mDatabase.child("habits").child(key).child("Title").setValue(habit.getTitle());
+		mDatabase.child("habits").child(key).child("Details").setValue(habit.getDetails());
+		mDatabase.child("habits").child(key).child("ExperiencePoints").setValue(habit.getExp());
+		mDatabase.child("habits").child(key).child("Periodicity").setValue(habit.getPeriodicity().toString());
+
+		if (habit.getLastCheckedIn() != null) {
+			mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(habit.getLastCheckedIn().toString());
+		} else {
+			mDatabase.child("habits").child(key).child("LastCheckedIn").setValue(LocalDate.MIN.toString());
+		}
+
+		mDatabase.child("habits").child(key).child("CreatedOn").setValue(habit.getCreatedOn().toString());
+		mDatabase.child("habits").child(key).child("Streak").setValue(habit.getStreak());
+		mDatabase.child("habits").child(key).child("UID").setValue(habit.getClient().getUserId());
+		mDatabase.child("users").child(habit.getClient().getUserId()).child("habits").child(key).setValue(habit.getTitle());
 	}
 
 }

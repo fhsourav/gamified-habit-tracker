@@ -35,6 +35,7 @@ public class Habit {
 		this.lastCheckedIn = lastCheckedIn;
 		this.exp = exp;
 		createdOn = LocalDateTime.now();
+		client.addHabit(this);
 	}
 
 	@RequiresApi(api = Build.VERSION_CODES.O)

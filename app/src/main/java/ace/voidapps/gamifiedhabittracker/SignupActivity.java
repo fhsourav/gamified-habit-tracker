@@ -1,12 +1,12 @@
-package ace.voidapps.gamifiedhabittracker.controller;
+package ace.voidapps.gamifiedhabittracker;
 
-import androidx.annotation.RequiresApi;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -15,11 +15,19 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.time.LocalDate;
 
-import ace.voidapps.gamifiedhabittracker.R;
-import ace.voidapps.gamifiedhabittracker.model.AuthenticationActivity;
+import ace.voidapps.gamifiedhabittracker.model.Client;
 import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
+import ace.voidapps.gamifiedhabittracker.model.User;
 
 public class SignupActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -35,9 +43,11 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 	private String email;
 	private String uname;
 	private String password;
+	private static final String TAG = "EmailPassword";
+
 	private LocalDate birthdate;
 
-	private LocalStorage localStorage;
+	private FirebaseAuth mAuth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,13 +80,6 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		localStorage = LocalStorage.getInstance();
-	}
-
-	@RequiresApi(api = Build.VERSION_CODES.O)
-	@Override
 	public void onClick(View view) {
 
 		switch (view.getId()) {
@@ -91,11 +94,9 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 				break;
 
 			case R.id.buttonSignup:
-				checkValues();
-				addValuesToStorage();
-				finish();
-				Intent intentAuthentication = new Intent(getApplicationContext(), AuthenticationActivity.class);
-				startActivity(intentAuthentication);
+				if (checkValues()) {
+					createAccount();
+				}
 				break;
 
 			case R.id.textViewSignupToLogin:
@@ -108,18 +109,7 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 
 	}
 
-	private void addValuesToStorage() {
-		localStorage.setAuthAction(0);
-		localStorage.setUname(uname);
-		localStorage.setEmail(email);
-		localStorage.setPassword(password);
-		localStorage.setFirstName(firstName);
-		localStorage.setLastName(lastName);
-		localStorage.setBirthdate(birthdate);
-	}
-
-	@RequiresApi(api = Build.VERSION_CODES.O)
-	private void checkValues() {
+	private boolean checkValues() {
 		firstName = editTextFirstName.getText().toString();
 		lastName = editTextLastName.getText().toString();
 		email = editTextEmail.getText().toString();
@@ -132,25 +122,25 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 		if (firstName.isEmpty()) {
 			editTextFirstName.setError("First name cannot be empty");
 			editTextFirstName.requestFocus();
-			return;
+			return false;
 		}
 
 		if (lastName.isEmpty()) {
 			editTextLastName.setError("Last name cannot be empty");
 			editTextLastName.requestFocus();
-			return;
+			return false;
 		}
 
 		if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 			editTextEmail.setError("Enter a valid email address");
 			editTextEmail.requestFocus();
-			return;
+			return false;
 		}
 
 		if (bDate.isEmpty()) {
 			editTextBirthDate.setError("Birthdate cannot be empty");
 			editTextBirthDate.requestFocus();
-			return;
+			return false;
 		}
 
 		try {
@@ -158,31 +148,78 @@ public class SignupActivity extends AppCompatActivity implements View.OnClickLis
 		} catch (Exception e) {
 			editTextBirthDate.setError("Enter date in YYYY-MM-DD format");
 			editTextBirthDate.requestFocus();
-			return;
+			return false;
 		}
 
 		if (birthdate.isAfter(LocalDate.now().minusYears(13))) {
 			editTextBirthDate.setError("User under 13 years");
 			editTextBirthDate.requestFocus();
-			return;
+			return false;
 		}
 
 		if (uname.isEmpty()) {
 			editTextUname.setError("Username cannot be empty");
 			editTextUname.requestFocus();
-			return;
+			return false;
 		}
 
 		if (password.isEmpty() || password.length() < 8) {
 			editTextPassword.setError("Password must be of at least 8 digits");
 			editTextPassword.requestFocus();
-			return;
+			return false;
 		}
 
 		if (!confirmPassword.equals(password)) {
 			editTextConfirmPassword.setError("Password doesn't match");
 			editTextConfirmPassword.requestFocus();
-			return;
+			return false;
+		}
+
+		return true;
+	}
+
+	public void createAccount() {
+
+		mAuth = FirebaseAuth.getInstance();
+
+		mAuth.createUserWithEmailAndPassword(email, password)
+				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						if (task.isSuccessful()) {
+							Log.d(TAG, "createUserWithEmail:success");
+							updateUI(mAuth.getCurrentUser());
+							Toast.makeText(SignupActivity.this, "Authentication successful", Toast.LENGTH_SHORT).show();
+						} else {
+							Log.w(TAG, "createUserWithEmail:failure", task.getException());
+							Toast.makeText(SignupActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+
+	}
+
+	private void updateUI(FirebaseUser firebaseUser) {
+		if (firebaseUser != null) {
+			finish();
+			addUserToDatabase(firebaseUser);
+			Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+			startActivity(intent);
+		}
+	}
+
+	private void addUserToDatabase(FirebaseUser firebaseUser) {
+		DatabaseReference mDatabase = FirebaseDatabase.getInstance(LocalStorage.REALTIME_DATABASE).getReference();
+		User user = new Client(firebaseUser.getUid(), uname, email, firstName, lastName, birthdate);
+		String uid = firebaseUser.getUid();
+		mDatabase.child("users").child(uid).child("Username").setValue(user.getUsername());
+		mDatabase.child("users").child(uid).child("Email").setValue(user.getEmail());
+		mDatabase.child("users").child(uid).child("FirstName").setValue(user.getFirstname());
+		mDatabase.child("users").child(uid).child("LastName").setValue(user.getLastName());
+		mDatabase.child("users").child(uid).child("BirthDate").setValue(user.getBirthDate().toString());
+		mDatabase.child("users").child(uid).child("IsAdmin").setValue(user.isAdmin());
+		if (!user.isAdmin()) {
+			mDatabase.child("users").child(uid).child("ExperiencePoints").setValue(((Client)user).getExp());
 		}
 	}
 

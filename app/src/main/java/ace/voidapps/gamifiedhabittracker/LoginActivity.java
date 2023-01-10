@@ -1,19 +1,23 @@
-package ace.voidapps.gamifiedhabittracker.controller;
+package ace.voidapps.gamifiedhabittracker;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import ace.voidapps.gamifiedhabittracker.R;
-import ace.voidapps.gamifiedhabittracker.model.AuthenticationActivity;
-import ace.voidapps.gamifiedhabittracker.model.LocalStorage;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -22,8 +26,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 	private TextView textViewToSignup;
 
 	private String email, password;
+	private static final String TAG = "EmailPassword";
 
-	private LocalStorage localStorage;
+	private FirebaseAuth mAuth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,12 +45,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 	}
 
 	@Override
-	protected void onStart() {
-		super.onStart();
-		localStorage = LocalStorage.getInstance();
-	}
-
-	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
 
@@ -56,37 +55,60 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 				break;
 
 			case R.id.buttonLogin:
-				checkValues();
-				addValuesToStorage();
-				finish();
-				Intent intentAuth = new Intent(getApplicationContext(), AuthenticationActivity.class);
-				startActivity(intentAuth);
+				if (checkValues()) {
+					signIn();
+				}
 				break;
 
 		}
 	}
 
-	private void checkValues() {
+	private boolean checkValues() {
 		email = editTextEmail.getText().toString();
 		password = editTextPassword.getText().toString();
 
 		if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
 			editTextEmail.setError("Enter a valid email address");
 			editTextEmail.requestFocus();
-			return;
+			return false;
 		}
 
 		if (password.isEmpty() || password.length() < 8) {
 			editTextPassword.setError("Password must be of at least 8 digits");
 			editTextPassword.requestFocus();
-			return;
+			return false;
 		}
+
+		return true;
 	}
 
-	private void addValuesToStorage() {
-		localStorage.setAuthAction(1);
-		localStorage.setEmail(email);
-		localStorage.setPassword(password);
+	public void signIn() {
+
+		mAuth = FirebaseAuth.getInstance();
+
+		mAuth.signInWithEmailAndPassword(email, password)
+				.addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+					@Override
+					public void onComplete(@NonNull Task<AuthResult> task) {
+						if (task.isSuccessful()) {
+							Log.d(TAG, "signInWithEmail:success");
+							updateUI(mAuth.getCurrentUser());
+							Toast.makeText(LoginActivity.this, "User logged in", Toast.LENGTH_SHORT).show();
+						} else {
+							Log.w(TAG, "signInWithEmail:failure", task.getException());
+							Toast.makeText(LoginActivity.this, "Log in failed. Incorrect email or password.", Toast.LENGTH_SHORT).show();
+						}
+					}
+				});
+
+	}
+
+	private void updateUI(FirebaseUser firebaseUser) {
+		if (firebaseUser != null) {
+			finish();
+			Intent intent = new Intent(getApplicationContext(), HomeActivity.class);
+			startActivity(intent);
+		}
 	}
 
 }
